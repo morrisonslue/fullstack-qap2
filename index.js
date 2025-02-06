@@ -21,8 +21,10 @@ app.post('/quiz', (req, res) => {
     const { answer } = req.body;
     console.log(`Answer: ${answer}`);
 
-    //answer will contain the value the user entered on the quiz page
-    //Logic must be added here to check if the answer is correct, then track the streak and redirect properly
+    //The `answer` variable will contain the value the user entered on the quiz page
+    //You must add the logic here to check if the answer is correct, then track the streak and redirect the user
+    //properly depending on whether or not they got the question right
+
     //By default we'll just redirect to the homepage again.
     res.redirect('/');
 });

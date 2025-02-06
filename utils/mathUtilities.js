@@ -1,5 +1,5 @@
 /**
- * Gets a random multiplication, division, subtraction or addition question
+ * Gets a randomly generated multiplication, division, subtraction or addition question
  * 
  * @returns {} The randomly generated math question
  */
