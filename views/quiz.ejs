@@ -8,6 +8,13 @@
 <body>
   <h1>Math Quiz</h1>
   <p><strong>Streak:</strong> <%= streak %></p>
+  <% if (typeof feedback !== 'undefined') { %>
+    <% if (feedback === 'correct') { %>
+      <p style="color: green;">You got the last question right!</p>
+    <% } else if (feedback === 'incorrect') { %>
+      <p style="color: red;">You got the last question wrong. Streak reset to 0.</p>
+    <% } %>
+  <% } %>
   <p>
     <strong>Question:</strong>
     <%= operand1 %> <%= operator %> <%= operand2 %>
@@ -17,5 +24,14 @@
     <input type="number" name="answer" step="any" required>
     <button type="submit">Submit</button>
   </form>
+  <br/>
+  <form action="/quiz" method="get">
+    <button type="submit">Try Another Question</button>
+  </form>
+  <br/>
+  <form action="/completion" method="get">
+    <button type="submit">Finish Quiz</button>
+  </form>
 </body>
 </html>
+

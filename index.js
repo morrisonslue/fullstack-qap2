@@ -21,12 +21,15 @@ app.get('/quiz', (req, res) => {
     currentQuestion = generateQuestion();
     console.log('Generated question:', currentQuestion);
 
+    const feedback = req.query.msg;
+
     // quiz EJS
     res.render('quiz', {
         operand1: currentQuestion.operand1,
         operand2: currentQuestion.operand2,
         operator: currentQuestion.operator,
-        streak 
+        streak,
+        feedback
     });
 });
 
@@ -58,11 +61,11 @@ app.post('/quiz', (req, res) => {
     if (checkAnswer(currentQuestion, answer)) {
         streak++;
         console.log('Correct! Updating streak...');
-        res.redirect('/completion');
+        res.redirect('/quiz?msg=correct');
     } else {
         console.log('Incorrect! Resetting streak...');
         streak = 0;
-        res.redirect('/');
+        res.redirect('/quiz?msg=incorrect');
     }
 });
 
@@ -70,3 +73,4 @@ app.post('/quiz', (req, res) => {
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
+
