@@ -2,36 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Quiz Question</title>
-  <link rel="stylesheet" href="/public/styles.css">
+  <title>Math Quiz - Question</title>
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <h1>Math Quiz</h1>
-  <p><strong>Streak:</strong> <%= streak %></p>
-  <% if (typeof feedback !== 'undefined') { %>
+  <div class="main-content quiz_container">
+    <h1>Math Quiz</h1>
+    <p><strong>Current Streak:</strong> <%= streak %></p>
     <% if (feedback === 'correct') { %>
-      <p style="color: green;">You got the last question right!</p>
-    <% } else if (feedback === 'incorrect') { %>
-      <p style="color: red;">You got the last question wrong. Streak reset to 0.</p>
+      <p class="feedback-correct">Yay! You got the last question right!</p>
     <% } %>
-  <% } %>
-  <p>
-    <strong>Question:</strong>
-    <%= operand1 %> <%= operator %> <%= operand2 %>
-  </p>
-  <form action="/quiz" method="post">
-    <label for="answer">Your Answer:</label>
-    <input type="number" name="answer" step="any" required>
-    <button type="submit">Submit</button>
-  </form>
-  <br/>
-  <form action="/quiz" method="get">
-    <button type="submit">Try Another Question</button>
-  </form>
-  <br/>
-  <form action="/completion" method="get">
-    <button type="submit">Finish Quiz</button>
-  </form>
+    <p>
+      <strong>Question:</strong>
+      <%= operand1 %> <%= operator %> <%= operand2 %>
+    </p>
+    <form action="/quiz" method="post" class="vertical-stack">
+      <label for="answer">Your Answer:</label>
+      <input type="number" name="answer" step="any" required>
+      <button type="submit" class="quiz-btn">Submit Answer</button>
+    </form>
+    <div style="height: 1rem;"></div>
+    <form action="/quiz" method="post" class="vertical-stack">
+      <input type="hidden" name="finishQuiz" value="true" />
+      <button type="submit" class="quiz-btn">Finish Quiz</button>
+    </form>
+  </div>
 </body>
 </html>
+
+
+
 

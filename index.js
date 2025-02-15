@@ -8,22 +8,24 @@ let streak = 0;
 let leaderboard = [];
 
 app.set('view engine', 'ejs');
-app.use(express.urlencoded({ extended: true })); // For parsing form data
-app.use(express.static('public')); // To serve static files (e.g., CSS)
+app.use(express.urlencoded({ extended: true })); 
+app.use(express.static('public')); 
 
 //routes required
 app.get('/', (req, res) => {
-    res.render('index');
+    const msg = req.query.msg;
+    res.render('index', {
+        leaderboard,
+        msg
+    });
 });
 
 app.get('/quiz', (req, res) => {
-    // generate random question
+    const feedback = req.query.msg;
+
     currentQuestion = generateQuestion();
     console.log('Generated question:', currentQuestion);
 
-    const feedback = req.query.msg;
-
-    // quiz EJS
     res.render('quiz', {
         operand1: currentQuestion.operand1,
         operand2: currentQuestion.operand2,
@@ -33,39 +35,43 @@ app.get('/quiz', (req, res) => {
     });
 });
 
-app.get('/completion', (req, res) => {
-    if (streak > 0) {
-        leaderboard.push({
-            streak: streak,
-            time: new Date().toLocaleString() 
-        });
-        leaderboard.sort((a, b) => b.streak - a.streak);
-        leaderboard = leaderboard.slice(0, 10);
-    }
-    res.render('completion', { streak });
-});
-
-app.get('/leaderboard', (req, res) => {
-    res.render('leaderboard', { leaderboard });
-});
-
-//Handles quiz submissions.
+//Handles quiz submissions
 app.post('/quiz', (req, res) => {
-    const { answer } = req.body;
+    const { answer, finishQuiz } = req.body;
     console.log(`Answer: ${answer}`);
 
-    //The `answer` variable will contain the value the user entered on the quiz page
-    //You must add the logic here to check if the answer is correct, then track the streak and redirect the user
-    //properly depending on whether or not they got the question right
+    if (finishQuiz === 'true') {
+        if (streak > 0) {
+            leaderboard.push({
+                streak: streak,
+                time: new Date().toLocaleString()
+            });
+            leaderboard.sort((a, b) => b.streak - a.streak);
+            leaderboard = leaderboard.slice(0, 10);
+        }
+        console.log('User finished quiz. Saving streak and resetting.');
+        streak = 0;
+        return res.redirect('/?msg=finished');
+    }
 
     if (checkAnswer(currentQuestion, answer)) {
         streak++;
-        console.log('Correct! Updating streak...');
-        res.redirect('/quiz?msg=correct');
+        console.log('Correct! Current streak:', streak);
+        return res.redirect('/quiz?msg=correct');
     } else {
-        console.log('Incorrect! Resetting streak...');
+        console.log('Incorrect! Final streak was:', streak);
+        if (streak > 0) {
+            leaderboard.push({
+                streak: streak,
+                time: new Date().toLocaleString()
+            });
+            leaderboard.sort((a, b) => b.streak - a.streak);
+            leaderboard = leaderboard.slice(0, 10);
+        }
+        // reset streak
         streak = 0;
-        res.redirect('/quiz?msg=incorrect');
+        // Redirect home and also have the you got it wrong message
+        return res.redirect('/?msg=incorrect');
     }
 });
 
@@ -73,4 +79,5 @@ app.post('/quiz', (req, res) => {
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
+
 
