@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Math Quiz Completion</title>
+  <link rel="stylesheet" href="/public/styles.css">
+</head>
+<body>
+  <h1>Quiz Finished</h1>
+  <p>Your current streak is: <%= streak %></p>
+  <form action="/quiz" method="get">
+    <button type="submit">Start Again</button>
+  </form>
+  <br />
+  <form action="/" method="get">
+    <button type="submit">Go to Home</button>
+  </form>
+</body>
+</html>
