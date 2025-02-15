@@ -5,12 +5,13 @@ const { generateQuestion, checkAnswer } = require('./quizLogic');
 
 let currentQuestion = null;
 let streak = 0;
+let leaderboard = [];
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true })); // For parsing form data
 app.use(express.static('public')); // To serve static files (e.g., CSS)
 
-//Some routes required for full functionality are missing here. Only get routes should be required
+//routes required
 app.get('/', (req, res) => {
     res.render('index');
 });
@@ -30,9 +31,19 @@ app.get('/quiz', (req, res) => {
 });
 
 app.get('/completion', (req, res) => {
-    res.render('completion', {
-        streak // streak display on completion page
-    });
+    if (streak > 0) {
+        leaderboard.push({
+            streak: streak,
+            time: new Date().toLocaleString() 
+        });
+        leaderboard.sort((a, b) => b.streak - a.streak);
+        leaderboard = leaderboard.slice(0, 10);
+    }
+    res.render('completion', { streak });
+});
+
+app.get('/leaderboard', (req, res) => {
+    res.render('leaderboard', { leaderboard });
 });
 
 //Handles quiz submissions.
